@@ -1,0 +1,44 @@
+# ---- OASIS data, images and model weights: NEVER commit (OASIS data-use agreement; also huge) ----
+data/
+weights/
+*.pt
+*.npz
+*.npy
+*.tar
+*.tar.gz
+*.nii
+*.nii.gz
+*.img
+*.hdr
+
+# ---- per-subject tables (subject IDs / labels / predictions derive from OASIS metadata) ----
+*predictions*.csv
+*_subjects.csv
+split.csv
+combined_cohort.csv
+cohort_*.csv
+oasis2_overlap_report.csv
+oasis2_vs_oasis1_nearest.csv
+registration_qc.csv
+slice_alignment_pairs.csv
+
+# ---- invalid / quarantined runs and logs ----
+*_LEAKED_overlap/
+*LEAKED*.ipynb
+*.log
+
+# ---- figures that show subjects' brain slices ----
+results/*example*.png
+results/*registration_check.png
+results/*lowqc.png
+results/*qc.png
+results/*_raw.png
+results/*orientation_check.png
+results/template_check.png
+
+# ---- misc ----
+.DS_Store
+.Rhistory
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
