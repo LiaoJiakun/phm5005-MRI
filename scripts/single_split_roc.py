@@ -1,3 +1,4 @@
+"""Test-set ROC curves of the single-split (no cross-validation) trial: results/single_split_5slice/single_split_roc.png."""
 from pathlib import Path
 import numpy as np, pandas as pd, matplotlib; matplotlib.use("Agg"); import matplotlib.pyplot as plt
 from sklearn.metrics import roc_auc_score, roc_curve

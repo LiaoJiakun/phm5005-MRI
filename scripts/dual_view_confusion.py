@@ -1,3 +1,4 @@
+"""Out-of-fold confusion matrices (threshold 0.5) for the OASIS-1-only dual-view experiments (results/dual_view/dual_view_confusion.png and .csv)."""
 from pathlib import Path
 import numpy as np, pandas as pd, matplotlib; matplotlib.use("Agg"); import matplotlib.pyplot as plt
 from sklearn.metrics import confusion_matrix

@@ -1,3 +1,4 @@
+"""Summary for the 5-slice experiments of five_slice_cv.py (results/five_slice/): pooled AUC with bootstrap CI, paired differences (2.5D vs late fusion, fixed vs Canny, multi- vs single-slice), confusion matrices, ROC figure."""
 from pathlib import Path
 import numpy as np, pandas as pd, matplotlib; matplotlib.use("Agg"); import matplotlib.pyplot as plt
 from scipy import stats

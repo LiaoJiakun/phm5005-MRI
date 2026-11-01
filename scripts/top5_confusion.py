@@ -1,3 +1,4 @@
+"""Confusion matrices of the five best cross-validated ResNet18 settings (236 subjects, threshold 0.5): results/top5_confusion.png and .csv."""
 from pathlib import Path
 import numpy as np, pandas as pd, matplotlib; matplotlib.use("Agg"); import matplotlib.pyplot as plt
 R = Path(__file__).resolve().parent.parent / "results"

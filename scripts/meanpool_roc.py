@@ -1,3 +1,4 @@
+"""Out-of-fold ROC curves of the mean-pooling trial (2.5D vs late fusion with mean pooling; fixed vs Canny): results/meanpool/meanpool_roc.png."""
 from pathlib import Path
 import numpy as np, pandas as pd, matplotlib; matplotlib.use("Agg"); import matplotlib.pyplot as plt
 from sklearn.metrics import roc_auc_score, roc_curve

@@ -1,3 +1,4 @@
+"""One-page report figure (ROC curves, AUC by seed, takeaways) for the first ResNet18 single-split results: results/resnet18/report_resnet18.png."""
 from pathlib import Path
 import numpy as np, pandas as pd, matplotlib.pyplot as plt
 from matplotlib.patches import FancyBboxPatch

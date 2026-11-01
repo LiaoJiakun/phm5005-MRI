@@ -1,3 +1,4 @@
+"""Summary and figures for the OASIS-1-only repeated 5-fold CV of cv_compare.py (results/cv/): pooled out-of-fold AUC with bootstrap CI, paired differences Canny minus fixed, ROC figure."""
 from pathlib import Path
 import numpy as np, pandas as pd, matplotlib.pyplot as plt
 from scipy import stats

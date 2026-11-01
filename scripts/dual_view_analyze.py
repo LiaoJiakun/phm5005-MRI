@@ -1,3 +1,4 @@
+"""Summary for the OASIS-1-only dual-view experiments of dual_view_cv.py (results/dual_view/): pooled out-of-fold AUC with bootstrap CI, paired differences between axial, coronal and dual-view, ROC and difference figure."""
 from pathlib import Path
 import numpy as np, pandas as pd, matplotlib; matplotlib.use("Agg"); import matplotlib.pyplot as plt
 from scipy import stats

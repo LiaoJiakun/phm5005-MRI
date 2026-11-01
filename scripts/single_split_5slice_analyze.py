@@ -1,3 +1,4 @@
+"""Summary table and confusion matrices for the single-split (no cross-validation) mean-pooling / Youden trial of single_split_5slice.py: results/single_split_5slice/."""
 from pathlib import Path
 import numpy as np, pandas as pd, matplotlib; matplotlib.use("Agg"); import matplotlib.pyplot as plt
 from sklearn.metrics import roc_auc_score
