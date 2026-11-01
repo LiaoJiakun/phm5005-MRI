@@ -1,0 +1,2 @@
+repeat,fold,arm,auc,acc,bal_acc,epochs,n_test
+0,0,baseline_check,0.5885416666666666,0.5416666666666666,0.5416666666666667,7.0,48.0
