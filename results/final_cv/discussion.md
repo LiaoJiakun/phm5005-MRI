@@ -1,0 +1,17 @@
+## Discussion
+
+**What the final run shows** (236 subjects: 198 OASIS-1 + 38 OASIS-2 subjects that are *not* also in OASIS-1; repeated stratified 5-fold CV, 2 repeats)
+
+- **Discrimination from a single 2D slice is modest.** Pooled out-of-fold ROC-AUC is 0.56-0.67 for the small CNN and 0.61-0.71 for the fine-tuned ResNet18. The best cell is ResNet18 on the fixed coronal slice (B, AUC 0.705, 95% CI 0.64-0.77), but its interval overlaps those of A (0.659) and C (0.685).
+- **Pretraining helps somewhat, not dramatically.** ResNet18 is ahead of the small CNN for coronal and dual-view inputs; for the axial slice the two are similar. The small CNN mostly predicts CDR=0 at the 0.5 threshold (sensitivity 0.08-0.37), i.e. its probabilities are poorly calibrated - compare models by AUC, not by accuracy.
+- **Fixed vs Canny.** Canny-selected slices (D) are the lowest or near-lowest setting for both model families (ResNet18: D - C = -0.07, CI -0.14 to -0.00; CNN: D - A = -0.14). The rule picks slices through the cerebellum / posterior fossa (see the index histograms), which carries little dementia-related information; this is a property of the edge-count rule, not of the idea of automatic slice selection in general.
+- **A second view does not clearly help.** For ResNet18, C - A = +0.03 (CI -0.02 to +0.08) and C - B = -0.03 (CI -0.07 to +0.01): the dual-view network is not better than the best single view. For the small CNN the dual-view network was unstable (some folds below 0.5). The only nominally positive paired difference is B - A for ResNet18 (+0.054, CI 0.006-0.102, 8 of 10 folds); with ten non-independent folds and several comparisons this should be treated as a hypothesis, not a finding.
+- **Grad-CAM** (above) is only a qualitative check of what the model attends to; it does not show the model is anatomically right.
+
+**An important data issue found during this run.** OASIS-2 shares many participants with OASIS-1: for **111 of the 149** registered OASIS-2 first-visit subjects the nearest OASIS-1 scan has image similarity 0.95-0.997 (different people never exceed 0.92) with matching sex, age and eTIV, and identical CDR in 104 of 111. Checking subject IDs alone (as we first did) misses this. When these duplicates were left in, ResNet18 reached AUC 0.85-0.90 and models trained on one dataset "generalised" to the other with AUC about 0.88 - an artefact of the same brains being in both training and test sets. After removing the duplicates, those numbers fall back to 0.6-0.7, in line with the OASIS-1-only results. **All earlier results that combined OASIS-1 and OASIS-2 are therefore invalid** and are kept only in folders marked `LEAKED_overlap`.
+
+**Limitations**
+- OASIS-2 adds only 38 new subjects, so the sample size grows by about 19% (198 -> 236); confidence intervals are still wide (about +-0.06 AUC) and differences below ~0.05 cannot be resolved. The per-dataset AUC for OASIS-2 (n = 38) is very noisy.
+- Labels are CDR-based dementia status, not pathologically confirmed Alzheimer's disease. The sex ratio differs between classes and was not adjusted for.
+- Slice indices (80, 105) and the Canny ranges (axial 50-110, coronal 66-140) are not anatomically validated. OASIS-2 images were registered by us (affine, mutual information) and look slightly different from the official OASIS-1 atlas-registered images.
+- Only a 2D, one-slice-per-view approach was tested, with one pre-specified set of hyper-parameters; no model selection on test folds was done, but this also means the models are not tuned.
