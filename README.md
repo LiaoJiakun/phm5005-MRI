@@ -44,6 +44,11 @@ No-overlap cohort (236), repeated stratified 5-fold CV. ResNet18 accuracy: mean 
 ## Best model vs the same model with Canny slices (teacher-style notebook)
 `notebooks/OASIS_best_model_vs_canny.ipynb`: ResNet18 late fusion (concat) on fixed 78–82 (AUC 0.740, acc 0.669) vs identical model on Canny c±2 (AUC 0.657, acc 0.619); paired AUC difference −0.088 (95% CI −0.177…+0.001, p = 0.064): suggestive, not conclusive. Code follows the course notebooks (explicit loop, checkpoint file, early stopping, torchmetrics, Grad-CAM); fold-0 results reproduce the cross-validation exactly.
 
+## MRI data augmentation and square-padded axial slices (best model: ResNet18, late fusion by concatenation, fixed 78–82)
+- **Aspect ratio:** axial slices (208 × 176) used to be resized straight to 128 × 128 (squashed by ~18%); now zero-padded to 208 × 208 first. No reliable effect: fixed 0.740 → 0.726 (paired Δ −0.009, p = 0.82), Canny 0.657 → 0.688 (Δ +0.027, p = 0.43). The Canny-selected slice changed for 56% of subjects.
+- **Augmentation** (training only, one parameter set per subject for all 5 slices; same folds/seeds): rotation ±5° baseline vs G (rotation ±10°, shift ±5%, scale ±5%), I (+ bias field, gamma, noise, blur) and GI. None helped (Δ AUC vs baseline: G −0.02…−0.03, I −0.04…−0.05, GI +0.00…−0.05); intensity augmentation was slightly worse in both runs (p = 0.037 once, not conclusive with six comparisons).
+- Details: `results/augmentation_square/summary_en.md`. The other experiments were **not** re-run on the square-padded slices. Slice axis / orientation / index checks: `scripts/verify_slices.py`.
+
 ## Layout
 ```
 data/raw/            OASIS-1 disc archives (symlinks), oasis_cross-sectional.xlsx, OASIS-2 RAW tars + demographics
