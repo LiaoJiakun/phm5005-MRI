@@ -37,17 +37,26 @@ def resnet_encoder(in_ch):
         m.conv1 = nn.Conv2d(in_ch, 64, 7, 2, 3, bias=False); m.conv1.weight.data.copy_(w)
     return m, 512
 
+def pool_slice_features(features):
+    """Late fusion by MEAN POOLING over slices.
+    features: list of k tensors, each [B, d] - the encoder output of one slice (same shared encoder for every slice).
+    Returns one [B, d] tensor that is passed to the classifier head (so the head input size does NOT grow with k)."""
+    return torch.stack(features, dim=0).mean(dim=0)      # [k, B, d] -> average over the slice axis -> [B, d]
+
 class SliceNet(nn.Module):
+    """method: 'stack'     = 2.5D, slices stacked as input channels (early fusion)
+               'late'      = shared encoder per slice, features CONCATENATED (head input k*d)
+               'late_mean' = shared encoder per slice, features MEAN-POOLED (head input d)"""
     def __init__(self, backbone, n_slices, method):
         super().__init__(); self.backbone, self.k, self.method = backbone, n_slices, method
         make = cnn_encoder if backbone == "cnn" else resnet_encoder
         if method == "stack": self.enc, d = make(n_slices if backbone == "cnn" else n_slices)
-        else:                 self.enc, d = make(1 if backbone == "cnn" else 3); d *= n_slices
+        else:                 self.enc, d = make(1 if backbone == "cnn" else 3); d = d * n_slices if method == "late" else d
         self.head = (nn.Sequential(nn.Linear(d, 32), nn.ReLU(), nn.Dropout(0.3), nn.Linear(32, 2)) if backbone == "cnn" else nn.Sequential(nn.Dropout(0.3), nn.Linear(d, 2)))
     def forward(self, x):                      # x: [B, k, H, W]
         if self.method == "stack": return self.head(self.enc(x))
         f = [self.enc(x[:, j:j + 1] if self.backbone == "cnn" else x[:, j:j + 1].repeat(1, 3, 1, 1)) for j in range(self.k)]
-        return self.head(torch.cat(f, 1))
+        return self.head(pool_slice_features(f) if self.method == "late_mean" else torch.cat(f, 1))
 
 class StackDataset(Dataset):
     def __init__(self, arr, idx, backbone, augment): self.arr, self.idx, self.mean, self.std, self.aug = arr, idx, *NORM[backbone], augment
@@ -84,13 +93,14 @@ def train(arr, method, backbone, tr, va, seed):
             if wait >= hp["patience"]: break
     model.load_state_dict(state); return model, ep + 1
 
-def run(backbone, out_dir):
+def run(backbone, out_dir, arms=None):
+    arms = arms or ARMS
     out_dir = Path(out_dir); out_dir.mkdir(parents=True, exist_ok=True); f_res, f_oof = out_dir / "fold_results.csv", out_dir / "oof_predictions.csv"
     done = pd.read_csv(f_res) if f_res.exists() else pd.DataFrame(columns=["repeat", "fold", "exp"]); oof = pd.read_csv(f_oof) if f_oof.exists() else pd.DataFrame(); t0 = time.time()
     data = {"subject_id": SID, "dataset": DS, "label": Y, "strata": np.array([f"{a}_{b}" for a, b in zip(DS, Y)])}
     for rep in range(L.N_REPEATS):
         for fold, (tr, va, te) in enumerate(L.cv_folds(data, rep)):
-            for name, (arr, method) in ARMS.items():
+            for name, (arr, method) in arms.items():
                 if ((done["repeat"] == rep) & (done["fold"] == fold) & (done["exp"] == name)).any(): continue
                 model, ep = train(arr, method, backbone, tr, va, L.SEEDS["model"] + rep * 100 + fold)
                 p, y = predict(model, loader(arr, te, backbone, False)); pred = (p >= .5).astype(int)
