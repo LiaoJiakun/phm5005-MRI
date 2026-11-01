@@ -35,6 +35,7 @@ results/*qc.png
 results/*_raw.png
 results/*orientation_check.png
 results/template_check.png
+results/square_padding_check.png
 
 # ---- misc ----
 .DS_Store

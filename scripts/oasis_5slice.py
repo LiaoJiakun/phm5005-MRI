@@ -4,7 +4,7 @@
   Slice sets: fixed 78-82  |  Canny: best slice c (most edges in 50-110) and c-2..c+2
   Reference : single slice (fixed 80, Canny c) through the same pipeline.
 Same folds / seeds / inner validation split as the final CV (oasis_lib), so results are paired with the earlier experiments."""
-import copy, random, time
+import copy, os, random, time
 from pathlib import Path
 import numpy as np, pandas as pd, torch, torch.nn as nn
 import torchvision.transforms.functional as TF
@@ -14,7 +14,7 @@ from torchvision.models import resnet18, ResNet18_Weights
 import oasis_lib as L
 
 DEVICE, HP = L.DEVICE, L.HPARAMS
-Z = np.load(L.ROOT / "data" / "combined_full" / "axial5_slices.npz", allow_pickle=True)
+Z = np.load(L.ROOT / "data" / "combined_full" / os.environ.get("AXIAL5_NPZ", "axial5_slices.npz"), allow_pickle=True)   # AXIAL5_NPZ=axial5_slices_square.npz -> square-padded axial slices
 SID, Y, DS = Z["subject_id"], Z["label"].astype(int), Z["dataset"]
 ARMS = {  # name: (array, method)      method "stack" = 2.5D / single slice, "late" = shared encoder + feature concatenation
     "S1: single slice fixed 80":   (Z["fixed5"][:, 2:3], "stack"),
