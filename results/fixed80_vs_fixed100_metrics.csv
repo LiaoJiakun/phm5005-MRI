@@ -1,0 +1,7 @@
+,Fixed slice 80,Fixed slice 100,Canny (80 run),Canny (100 run)
+Accuracy,0.733,0.5,0.7,0.7
+Balanced accuracy,0.733,0.5,0.7,0.7
+F1,0.733,0.0,0.727,0.727
+Sensitivity,0.733,0.0,0.8,0.8
+Specificity,0.733,1.0,0.6,0.6
+ROC-AUC,0.698,0.618,0.667,0.667
