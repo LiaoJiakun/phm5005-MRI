@@ -1,0 +1,5 @@
+,val_auc,val_auc,test_auc,test_auc,test_acc,test_acc,test_bal_acc,test_bal_acc,test_f1,test_f1
+,mean,std,mean,std,mean,std,mean,std,mean,std
+arm,,,,,,,,,,
+Canny selected,0.701,0.061,0.75,0.061,0.622,0.154,0.622,0.154,0.724,0.087
+Fixed slice 80,0.721,0.053,0.719,0.068,0.622,0.077,0.622,0.077,0.695,0.037
