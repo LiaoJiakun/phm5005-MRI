@@ -78,6 +78,11 @@ No-overlap cohort (236), repeated stratified 5-fold CV. ResNet18 accuracy: mean 
 - **Augmentation** (training only, one parameter set per subject for all 5 slices; same folds/seeds): rotation ±5° baseline vs G (rotation ±10°, shift ±5%, scale ±5%), I (+ bias field, gamma, noise, blur) and GI. None helped (Δ AUC vs baseline: G −0.02…−0.03, I −0.04…−0.05, GI +0.00…−0.05); intensity augmentation was slightly worse in both runs (p = 0.037 once, not conclusive with six comparisons).
 - Details: `results/augmentation_square/summary_en.md`. The other experiments were **not** re-run on the square-padded slices. Slice axis / orientation / index checks: `scripts/verify_slices.py`.
 
+## Hippocampus-level slices vs the earlier fixed slices (exploratory)
+- **Level:** chosen from anatomy before any model was run (no labels): on a 30-subject mean image the hippocampus is seen at axial z ≈ 60–66, and the fixed coronal 105 already cuts through it. This is an eyeball estimate (± ~5 slices), not an atlas segmentation. Primary choice z = 62 (stack 60–64); z = 59–63 was added afterwards on request, so two stacks were tried.
+- **Result (ResNet18, same folds/seeds, mean fold AUC; paired difference vs the earlier fixed slices):** single slice z62 0.636 / z61 0.648 vs axial 80 0.679 (Δ −0.043 / −0.032); late fusion 60–64 0.673 / 59–63 0.678 vs 78–82 0.727 (Δ −0.054 / −0.049); axial 62 + coronal 105 0.645 vs axial 80 + coronal 105 0.666 (Δ −0.021). All intervals include 0 (p 0.19–0.49): **hippocampus-level slices did not improve the result**, and are if anything slightly lower.
+- Scripts: `scripts/build_hippo_slices.py`, `hippo_cv.py`, `hippo_cv_59_63.py`, `hippo_analyze.py`; tables in `results/hippo/`. Per-slice descriptive profile (atrophy proxy and Canny edge count): `scripts/slice_signal_profile.py`, `results/slice_signal_profile.png` (uses labels, descriptive only).
+
 ## Glossary
 
 | Term | Meaning |
@@ -278,6 +283,11 @@ flowchart LR
 - **纵横比：** 轴位切片（208 × 176）原来直接缩放到 128 × 128（被压扁约 18%）；现在先补零到 208 × 208 再缩放。没有可靠的影响：固定 0.740 → 0.726（配对差 −0.009，p = 0.82），Canny 0.657 → 0.688（差 +0.027，p = 0.43）。56% 的受试者的 Canny 选层发生了变化。
 - **数据增强**（只用于训练，每个受试者的 5 张切片共用一组随机参数；折和随机种子相同）：旋转 ±5° 的基线对比 G（旋转 ±10°、平移 ±5%、缩放 ±5%）、I（再加偏置场、伽马、噪声、模糊）和 GI。都没有帮助（AUC 相对基线的变化：G −0.02…−0.03，I −0.04…−0.05，GI +0.00…−0.05）；强度增强在两次实验里都略差（有一次 p = 0.037，在六次比较下不能下结论）。
 - 详情：`results/augmentation_square/summary_en.md`。其他实验**没有**用补成正方形的切片重跑。切片的轴、方向和层号检查：`scripts/verify_slices.py`。
+
+## 海马体层切片与原来固定切片的对比（探索性）
+- **层的选择：** 在跑任何模型之前，只凭解剖定下（没有用标签）：在 30 人平均图上，海马体出现在轴位 z ≈ 60–66，原来固定的冠状 105 本来就切过海马体。这是目测估计（误差约 ±5 层），不是图谱分割。主选 z = 62（叠 60–64）；z = 59–63 是之后应要求加的，所以一共试了两种叠层。
+- **结果（ResNet18，折和随机种子相同，各折 AUC 均值；与原来固定切片的配对差）：** 单层 z62 0.636 / z61 0.648，对比轴位 80 的 0.679（差 −0.043 / −0.032）；晚期融合 60–64 0.673 / 59–63 0.678，对比 78–82 的 0.727（差 −0.054 / −0.049）；轴位 62 加冠状 105 为 0.645，对比轴位 80 加冠状 105 的 0.666（差 −0.021）。所有区间都包含 0（p 在 0.19 到 0.49 之间）：**海马体层切片没有改善结果**，反而略低。
+- 脚本：`scripts/build_hippo_slices.py`、`hippo_cv.py`、`hippo_cv_59_63.py`、`hippo_analyze.py`；表格在 `results/hippo/`。逐层的描述性分析（萎缩指标和 Canny 边缘数）：`scripts/slice_signal_profile.py`、`results/slice_signal_profile.png`（用了标签，只是描述）。
 
 ## 术语表
 

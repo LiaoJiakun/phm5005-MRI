@@ -1,0 +1,16 @@
+exp,mean_fold_auc,pooled_auc,ci_lo,ci_hi,mean_acc
+A: fixed axial 80,0.639,0.631,0.574,0.685,0.606
+B: fixed coronal 105,0.693,0.68,0.62,0.733,0.627
+C: fixed axial+coronal,0.666,0.664,0.597,0.718,0.612
+D: Canny axial+coronal,0.596,0.593,0.53,0.653,0.589
+H1: single axial z62,0.636,0.618,0.556,0.673,0.561
+H2: axial z62 + coronal 105,0.645,0.646,0.593,0.712,0.6
+H3: late fusion z60-64,0.673,0.66,0.598,0.72,0.627
+H4: late fusion z59-63,0.678,0.666,0.609,0.719,0.617
+H5: single axial z61,0.648,0.629,0.574,0.685,0.589
+M1: 2.5D Canny c±2,0.608,0.599,0.542,0.653,0.58
+M1: 2.5D fixed 78-82,0.668,0.654,0.596,0.715,0.606
+M2: late fusion Canny c±2,0.639,0.633,0.576,0.687,0.621
+M2: late fusion fixed 78-82,0.727,0.721,0.663,0.783,0.649
+S1: single slice Canny c,0.607,0.609,0.547,0.664,0.585
+S1: single slice fixed 80,0.679,0.644,0.588,0.7,0.61

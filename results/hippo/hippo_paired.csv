@@ -1,0 +1,6 @@
+new,reference,mean_diff,ci_lo,ci_hi,wilcoxon_p,folds_better,n
+H1: single axial z62,S1: single slice fixed 80,-0.043,-0.126,0.039,0.322,4,10
+H5: single axial z61,S1: single slice fixed 80,-0.032,-0.108,0.045,0.232,5,10
+H3: late fusion z60-64,M2: late fusion fixed 78-82,-0.054,-0.141,0.033,0.193,3,10
+H4: late fusion z59-63,M2: late fusion fixed 78-82,-0.049,-0.14,0.042,0.322,3,10
+H2: axial z62 + coronal 105,C: fixed axial+coronal,-0.021,-0.095,0.052,0.492,4,10
