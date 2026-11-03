@@ -83,6 +83,10 @@ No-overlap cohort (236), repeated stratified 5-fold CV. ResNet18 accuracy: mean 
 - **Result (ResNet18, same folds/seeds, mean fold AUC; paired difference vs the earlier fixed slices):** single slice z62 0.636 / z61 0.648 vs axial 80 0.679 (Δ −0.043 / −0.032); late fusion 60–64 0.673 / 59–63 0.678 vs 78–82 0.727 (Δ −0.054 / −0.049); axial 62 + coronal 105 0.645 vs axial 80 + coronal 105 0.666 (Δ −0.021). All intervals include 0 (p 0.19–0.49): **hippocampus-level slices did not improve the result**, and are if anything slightly lower.
 - Scripts: `scripts/build_hippo_slices.py`, `hippo_cv.py`, `hippo_cv_59_63.py`, `hippo_analyze.py`; tables in `results/hippo/`. Per-slice descriptive profile (atrophy proxy and Canny edge count): `scripts/slice_signal_profile.py`, `results/slice_signal_profile.png` (uses labels, descriptive only).
 
+## Early fusion by summation, and a fresh-seed re-run (exploratory)
+- **Early fusion SUM** (the 5 slices added pixel-wise, divided by 5, into one image) vs early CONCAT (= 2.5D channel stacking), late CONCAT and late MEAN, same folds/seeds. ResNet18, fixed 78–82 (mean fold AUC): SUM 0.666, early CONCAT 0.668, late MEAN 0.693, late CONCAT 0.727; Canny c±2: SUM 0.636, early CONCAT 0.608, late MEAN 0.685, late CONCAT 0.639. Summation did not beat the other methods with ResNet18 (SUM − late CONCAT, fixed: −0.061, p = 0.010). With the small CNN it was nominally higher than the other fixed-slice arms (0.702 vs 0.642–0.689), but mean fold AUC and pooled AUC disagree (0.702 vs 0.642), so we do not rely on it. Tables: `results/early_sum/`.
+- **Fresh seeds** (new fold/validation/model seeds, 3 repeats; the earlier seeds were used for every comparison, so the best configuration had been picked on them): late fusion fixed 78–82 fell from 0.727 to 0.683, hippocampus z59–63 stayed at 0.670 (paired difference −0.012, 95% interval −0.041…+0.017). Part of the earlier fixed-slice advantage was selection luck. Tables: `results/fresh_seeds/`; figures for the hippocampus comparison: `results/hippo/hippo_vs_fixed.png`, `hippo_roc_confusion.png`.
+
 ## Glossary
 
 | Term | Meaning |
@@ -288,6 +292,10 @@ flowchart LR
 - **层的选择：** 在跑任何模型之前，只凭解剖定下（没有用标签）：在 30 人平均图上，海马体出现在轴位 z ≈ 60–66，原来固定的冠状 105 本来就切过海马体。这是目测估计（误差约 ±5 层），不是图谱分割。主选 z = 62（叠 60–64）；z = 59–63 是之后应要求加的，所以一共试了两种叠层。
 - **结果（ResNet18，折和随机种子相同，各折 AUC 均值；与原来固定切片的配对差）：** 单层 z62 0.636 / z61 0.648，对比轴位 80 的 0.679（差 −0.043 / −0.032）；晚期融合 60–64 0.673 / 59–63 0.678，对比 78–82 的 0.727（差 −0.054 / −0.049）；轴位 62 加冠状 105 为 0.645，对比轴位 80 加冠状 105 的 0.666（差 −0.021）。所有区间都包含 0（p 在 0.19 到 0.49 之间）：**海马体层切片没有改善结果**，反而略低。
 - 脚本：`scripts/build_hippo_slices.py`、`hippo_cv.py`、`hippo_cv_59_63.py`、`hippo_analyze.py`；表格在 `results/hippo/`。逐层的描述性分析（萎缩指标和 Canny 边缘数）：`scripts/slice_signal_profile.py`、`results/slice_signal_profile.png`（用了标签，只是描述）。
+
+## 早期融合求和，以及全新随机种子的重跑（探索性）
+- **早期融合求和**（5 张切片逐像素相加后除以 5，变成一张图）对比早期拼接（即 2.5D 通道叠加）、晚期拼接和晚期均值池化，折和种子相同。ResNet18，固定 78–82（各折 AUC 均值）：求和 0.666，早期拼接 0.668，晚期均值池化 0.693，晚期拼接 0.727；Canny c±2：求和 0.636，早期拼接 0.608，晚期均值池化 0.685，晚期拼接 0.639。ResNet18 下求和没有超过其他方式（固定层：求和减晚期拼接 −0.061，p = 0.010）。小 CNN 下它名义上高于其他固定层方案（0.702 对 0.642–0.689），但各折平均和汇总 AUC 不一致（0.702 对 0.642），所以我们不依赖这个结果。表格：`results/early_sum/`。
+- **全新种子**（新的折、验证集和模型种子，3 次重复；之前所有比较都用同一套种子，最好的方案是在它们上面挑出来的）：固定 78–82 的晚期融合从 0.727 降到 0.683，海马体 z59–63 保持 0.670（配对差 −0.012，95% 区间 −0.041…+0.017）。之前固定层的优势有一部分是挑选带来的运气。表格：`results/fresh_seeds/`；海马体对比的图：`results/hippo/hippo_vs_fixed.png`、`hippo_roc_confusion.png`。
 
 ## 术语表
 

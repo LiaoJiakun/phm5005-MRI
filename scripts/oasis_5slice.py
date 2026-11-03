@@ -46,15 +46,18 @@ def pool_slice_features(features):
 class SliceNet(nn.Module):
     """method: 'stack'     = 2.5D, slices stacked as input channels (early fusion)
                'late'      = shared encoder per slice, features CONCATENATED (head input k*d)
-               'late_mean' = shared encoder per slice, features MEAN-POOLED (head input d)"""
+               'late_mean' = shared encoder per slice, features MEAN-POOLED (head input d)
+               'early_sum' = the k slices are summed pixel-wise (divided by k) into one 1-channel image, one encoder"""
     def __init__(self, backbone, n_slices, method):
         super().__init__(); self.backbone, self.k, self.method = backbone, n_slices, method
         make = cnn_encoder if backbone == "cnn" else resnet_encoder
-        if method == "stack": self.enc, d = make(n_slices if backbone == "cnn" else n_slices)
+        if method == "stack":       self.enc, d = make(n_slices if backbone == "cnn" else n_slices)
+        elif method == "early_sum": self.enc, d = make(1)       # early fusion by summation: the k slices are added pixel-wise into ONE image (1 channel)
         else:                 self.enc, d = make(1 if backbone == "cnn" else 3); d = d * n_slices if method == "late" else d
         self.head = (nn.Sequential(nn.Linear(d, 32), nn.ReLU(), nn.Dropout(0.3), nn.Linear(32, 2)) if backbone == "cnn" else nn.Sequential(nn.Dropout(0.3), nn.Linear(d, 2)))
     def forward(self, x):                      # x: [B, k, H, W]
         if self.method == "stack": return self.head(self.enc(x))
+        if self.method == "early_sum": return self.head(self.enc(x.mean(1, keepdim=True)))   # sum / k (same as the sum up to a constant, keeps the grey-level range)
         f = [self.enc(x[:, j:j + 1] if self.backbone == "cnn" else x[:, j:j + 1].repeat(1, 3, 1, 1)) for j in range(self.k)]
         return self.head(pool_slice_features(f) if self.method == "late_mean" else torch.cat(f, 1))
 

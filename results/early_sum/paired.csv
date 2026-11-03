@@ -1,0 +1,13 @@
+backbone,slices,comparison,mean_diff,ci_lo,ci_hi,wilcoxon_p,n
+resnet,fixed,early SUM - early CONCAT (2.5D),-0.003,-0.046,0.041,1.0,10
+resnet,fixed,early SUM - late CONCAT,-0.061,-0.096,-0.026,0.01,10
+resnet,fixed,early SUM - late MEAN,-0.027,-0.08,0.026,0.193,10
+resnet,Canny,early SUM - early CONCAT (2.5D),0.029,-0.029,0.086,0.375,10
+resnet,Canny,early SUM - late CONCAT,-0.002,-0.059,0.054,0.695,10
+resnet,Canny,early SUM - late MEAN,-0.049,-0.129,0.031,0.275,10
+cnn,fixed,early SUM - early CONCAT (2.5D),0.06,-0.029,0.15,0.01,10
+cnn,fixed,early SUM - late CONCAT,0.027,-0.007,0.061,0.008,10
+cnn,fixed,early SUM - late MEAN,0.013,-0.015,0.041,0.383,10
+cnn,Canny,early SUM - early CONCAT (2.5D),0.046,-0.029,0.121,0.301,10
+cnn,Canny,early SUM - late CONCAT,0.019,-0.037,0.075,1.0,10
+cnn,Canny,early SUM - late MEAN,-0.004,-0.014,0.005,0.275,10

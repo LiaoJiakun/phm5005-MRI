@@ -1,0 +1,2 @@
+mean_diff,ci_lo,ci_hi,wilcoxon_p,folds_hippo_better,n
+-0.012,-0.041,0.017,0.303,5,15
