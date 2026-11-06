@@ -8,14 +8,14 @@
 2. **ImageNet-pretrained ResNet18 beats the small CNN trained from scratch** (AUC 0.61–0.74 vs 0.56–0.67; the small CNN mostly predicts "no dementia" at threshold 0.5).
 3. **Canny-selected slices bring no benefit:** lowest or near-lowest in every comparison (the rule picks cerebellum slices). The best-powered pair is only suggestive (ΔAUC −0.088, p = 0.064). Fusing several slices/views and MRI-specific data augmentation gave no reliable gain either.
 4. **OASIS-2 shares participants with OASIS-1:** 111 of the 149 first-visit OASIS-2 subjects are the same people as OASIS-1 participants (image similarity 0.95–0.997). A naive merge inflates AUC to 0.85–0.90 (identity leakage); after removing them only **38 new subjects** remain (**236** in total).
-5. **Best setting:** ResNet18, late fusion of the fixed axial slices 78–82 (AUC 0.74, accuracy 0.67) — selected among many settings, so optimistic. **Not a diagnostic tool.**
+5. **Best setting:** ResNet18, feature fusion of the fixed axial slices 78–82 (AUC 0.74, accuracy 0.67) — selected among many settings, so optimistic. **Not a diagnostic tool.**
 
 ```mermaid
 flowchart LR
   A["OASIS-1 discs<br/>198 subjects, age ≥ 60"] --> C["Cohort + image-level de-duplication<br/>236 subjects"]
   B["OASIS-2 RAW, first visit only<br/>atlas registration, 38 unique"] --> C
   C --> D["128×128 slices<br/>fixed / Canny; axial, coronal, 5-slice"]
-  D --> E["Models<br/>small CNN | ResNet18<br/>single-view, dual-view, 2.5D, late fusion"]
+  D --> E["Models<br/>small CNN | ResNet18<br/>single-view, dual-view, 2.5D, feature fusion"]
   E --> F["Evaluation<br/>repeated stratified 5-fold CV<br/>AUC, accuracy, confusion matrices, paired tests"]
 ```
 
@@ -64,28 +64,28 @@ Models: small 2D CNN (from scratch) and ImageNet-pretrained ResNet18 (full fine-
 - Only nominal positive paired difference: ResNet18 B − A = +0.054 (CI 0.006–0.102) – treat as a hypothesis.
 - The small CNN mostly predicts CDR=0 at threshold 0.5 (poor calibration) – compare by AUC.
 
-## 5-slice comparison (Method 1: 2.5D vs Method 2: late fusion; fixed 78–82 vs Canny c±2)
-Same 236-subject cohort and folds. ResNet18: late fusion on fixed slices is best (AUC 0.740, CI 0.68–0.80) vs 0.673 (2.5D) and 0.679 (single slice); small CNN: no difference (0.59–0.65). Fixed beats Canny everywhere. Details: `results/five_slice/summary_en.md`, `five_slice_results.png`.
+## 5-slice comparison (Method 1: 2.5D vs Method 2: feature fusion; fixed 78–82 vs Canny c±2)
+Same 236-subject cohort and folds. ResNet18: feature fusion on fixed slices is best (AUC 0.740, CI 0.68–0.80) vs 0.673 (2.5D) and 0.679 (single slice); small CNN: no difference (0.59–0.65). Fixed beats Canny everywhere. Details: `results/five_slice/summary_en.md`, `five_slice_results.png`.
 
-## Mean-pooling trial (late fusion with mean pooling vs 2.5D; fixed 78–82 vs Canny c±2)
+## Mean-pooling trial (feature fusion with mean pooling vs 2.5D; fixed 78–82 vs Canny c±2)
 No-overlap cohort (236), repeated stratified 5-fold CV. ResNet18 accuracy: mean pooling 0.661 (fixed) / 0.661 (Canny) vs 2.5D 0.623 / 0.555 vs concat 0.669 / 0.619. Mean pooling ≥ 2.5D in all cells (only ResNet18-Canny AUC clearly > 0: +0.078, CI 0.014–0.142); ≈ concatenation. Notebook: `notebooks/OASIS_5slice_meanpool_trial.ipynb`; tables/figures: `results/meanpool/`.
 
 ## Best model vs the same model with Canny slices (teacher-style notebook)
-`notebooks/OASIS_best_model_vs_canny.ipynb`: ResNet18 late fusion (concat) on fixed 78–82 (AUC 0.740, acc 0.669) vs identical model on Canny c±2 (AUC 0.657, acc 0.619); paired AUC difference −0.088 (95% CI −0.177…+0.001, p = 0.064): suggestive, not conclusive. Code follows the course notebooks (explicit loop, checkpoint file, early stopping, torchmetrics, Grad-CAM); fold-0 results reproduce the cross-validation exactly.
+`notebooks/OASIS_best_model_vs_canny.ipynb`: ResNet18 feature fusion (concat) on fixed 78–82 (AUC 0.740, acc 0.669) vs identical model on Canny c±2 (AUC 0.657, acc 0.619); paired AUC difference −0.088 (95% CI −0.177…+0.001, p = 0.064): suggestive, not conclusive. Code follows the course notebooks (explicit loop, checkpoint file, early stopping, torchmetrics, Grad-CAM); fold-0 results reproduce the cross-validation exactly.
 
-## MRI data augmentation and square-padded axial slices (best model: ResNet18, late fusion by concatenation, fixed 78–82)
+## MRI data augmentation and square-padded axial slices (best model: ResNet18, feature fusion by concatenation, fixed 78–82)
 - **Aspect ratio:** axial slices (208 × 176) used to be resized straight to 128 × 128 (squashed by ~18%); now zero-padded to 208 × 208 first. No reliable effect: fixed 0.740 → 0.726 (paired Δ −0.009, p = 0.82), Canny 0.657 → 0.688 (Δ +0.027, p = 0.43). The Canny-selected slice changed for 56% of subjects.
 - **Augmentation** (training only, one parameter set per subject for all 5 slices; same folds/seeds): rotation ±5° baseline vs G (rotation ±10°, shift ±5%, scale ±5%), I (+ bias field, gamma, noise, blur) and GI. None helped (Δ AUC vs baseline: G −0.02…−0.03, I −0.04…−0.05, GI +0.00…−0.05); intensity augmentation was slightly worse in both runs (p = 0.037 once, not conclusive with six comparisons).
 - Details: `results/augmentation_square/summary_en.md`. The other experiments were **not** re-run on the square-padded slices. Slice axis / orientation / index checks: `scripts/verify_slices.py`.
 
 ## Hippocampus-level slices vs the earlier fixed slices (exploratory)
 - **Level:** chosen from anatomy before any model was run (no labels): on a 30-subject mean image the hippocampus is seen at axial z ≈ 60–66, and the fixed coronal 105 already cuts through it. This is an eyeball estimate (± ~5 slices), not an atlas segmentation. Primary choice z = 62 (stack 60–64); z = 59–63 was added afterwards on request, so two stacks were tried.
-- **Result (ResNet18, same folds/seeds, mean fold AUC; paired difference vs the earlier fixed slices):** single slice z62 0.636 / z61 0.648 vs axial 80 0.679 (Δ −0.043 / −0.032); late fusion 60–64 0.673 / 59–63 0.678 vs 78–82 0.727 (Δ −0.054 / −0.049); axial 62 + coronal 105 0.645 vs axial 80 + coronal 105 0.666 (Δ −0.021). All intervals include 0 (p 0.19–0.49): **hippocampus-level slices did not improve the result**, and are if anything slightly lower.
+- **Result (ResNet18, same folds/seeds, mean fold AUC; paired difference vs the earlier fixed slices):** single slice z62 0.636 / z61 0.648 vs axial 80 0.679 (Δ −0.043 / −0.032); feature fusion 60–64 0.673 / 59–63 0.678 vs 78–82 0.727 (Δ −0.054 / −0.049); axial 62 + coronal 105 0.645 vs axial 80 + coronal 105 0.666 (Δ −0.021). All intervals include 0 (p 0.19–0.49): **hippocampus-level slices did not improve the result**, and are if anything slightly lower.
 - Scripts: `scripts/build_hippo_slices.py`, `hippo_cv.py`, `hippo_cv_59_63.py`, `hippo_analyze.py`; tables in `results/hippo/`. Per-slice descriptive profile (atrophy proxy and Canny edge count): `scripts/slice_signal_profile.py`, `results/slice_signal_profile.png` (uses labels, descriptive only).
 
 ## Early fusion by summation, and a fresh-seed re-run (exploratory)
 - **Early fusion SUM** (the 5 slices added pixel-wise, divided by 5, into one image) vs early CONCAT (= 2.5D channel stacking), late CONCAT and late MEAN, same folds/seeds. ResNet18, fixed 78–82 (mean fold AUC): SUM 0.666, early CONCAT 0.668, late MEAN 0.693, late CONCAT 0.727; Canny c±2: SUM 0.636, early CONCAT 0.608, late MEAN 0.685, late CONCAT 0.639. Summation did not beat the other methods with ResNet18 (SUM − late CONCAT, fixed: −0.061, p = 0.010). With the small CNN it was nominally higher than the other fixed-slice arms (0.702 vs 0.642–0.689), but mean fold AUC and pooled AUC disagree (0.702 vs 0.642), so we do not rely on it. Tables: `results/early_sum/`.
-- **Fresh seeds** (new fold/validation/model seeds, 3 repeats; the earlier seeds were used for every comparison, so the best configuration had been picked on them): late fusion fixed 78–82 fell from 0.727 to 0.683, hippocampus z59–63 stayed at 0.670 (paired difference −0.012, 95% interval −0.041…+0.017). Part of the earlier fixed-slice advantage was selection luck. Tables: `results/fresh_seeds/`; figures for the hippocampus comparison: `results/hippo/hippo_vs_fixed.png`, `hippo_roc_confusion.png`.
+- **Fresh seeds** (new fold/validation/model seeds, 3 repeats; the earlier seeds were used for every comparison, so the best configuration had been picked on them): feature fusion fixed 78–82 fell from 0.727 to 0.683, hippocampus z59–63 stayed at 0.670 (paired difference −0.012, 95% interval −0.041…+0.017). Part of the earlier fixed-slice advantage was selection luck. Tables: `results/fresh_seeds/`; figures for the hippocampus comparison: `results/hippo/hippo_vs_fixed.png`, `hippo_roc_confusion.png`.
 
 ## Glossary
 
@@ -95,7 +95,7 @@ No-overlap cohort (236), repeated stratified 5-fold CV. ResNet18 accuracy: mean 
 | **Fixed slice** | A slice at a pre-set position of the atlas-registered volume (axial 80, coronal 105, or axial 78–82). |
 | **Canny-selected slice** | The slice with the most Canny edge pixels within a search range (axial 50–110). Needs no labels; it tends to pick the cerebellum. |
 | **2.5D** | Several neighbouring slices stacked as the input channels of one 2D network (early fusion). |
-| **Late fusion** | Each slice goes through the same encoder separately; the features are combined afterwards (concatenation or mean pooling). |
+| **Feature fusion** | Each slice goes through the same encoder separately; the features are combined afterwards (concatenation or mean pooling). |
 | **Mean pooling** | Element-wise average of the per-slice feature vectors (order-independent, no extra parameters). |
 | **Fine-tuning / pretrained** | Starting from ImageNet weights and updating all layers with a small learning rate. |
 | **Repeated stratified 5-fold CV** | Subject-level 5-fold cross-validation repeated twice, stratified by dataset × label; every subject is tested once per repeat. |
@@ -113,11 +113,11 @@ No-overlap cohort (236), repeated stratified 5-fold CV. ResNet18 accuracy: mean 
 | **A, B, C, D** | final experiments: A fixed axial 80; B fixed coronal 105; C fixed axial 80 + coronal 105 (dual-view); D Canny axial + Canny coronal (dual-view) | `results/final_cv`, `results/dual_view` |
 | **S1** | single-slice reference (fixed 80 or Canny c) | `results/five_slice` |
 | **M1 (2.5D)** | 5 slices stacked as input channels | `results/five_slice` |
-| **M2** | late fusion by **concatenation**, shared encoder | `results/five_slice` |
-| **M2-mean** | late fusion by **mean pooling** | `results/meanpool` |
+| **M2** | feature fusion by **concatenation**, shared encoder | `results/five_slice` |
+| **M2-mean** | feature fusion by **mean pooling** | `results/meanpool` |
 | **fixed 78–82** | the 5 consecutive axial slices 78, 79, 80, 81, 82 | all 5-slice experiments |
 | **Canny c±2** | the Canny-selected slice `c` and the 2 slices on each side | all 5-slice experiments |
-| **Model A / Model B** | in `OASIS_best_model_vs_canny.ipynb`: A = fixed 78–82, B = Canny c±2 (same ResNet18 late fusion) | notebook |
+| **Model A / Model B** | in `OASIS_best_model_vs_canny.ipynb`: A = fixed 78–82, B = Canny c±2 (same ResNet18 feature fusion) | notebook |
 | **baseline, G, I, GI** | augmentation arms: rotation ±5° / geometric / intensity / both | `results/augmentation*` |
 | **squashed / square-padded** | axial slice resized straight to 128×128 / padded to a square first | `results/square` |
 
@@ -132,8 +132,8 @@ No-overlap cohort (236), repeated stratified 5-fold CV. ResNet18 accuracy: mean 
 | 5 | ❌ **INVALID – kept for the record:** merged OASIS-1 + OASIS-2 runs before de-duplication | `combined_*.py`, `single_split_experiments.py`, `single_split_resnet*.py` | not included (`*_LEAKED_overlap`) | – |
 | 6 | Overlap detection, 236-subject cohort | `build_combined.py`, `dataset_audit.py`, `overlap_figure.py` | `oasis_overlap_check.png` | – |
 | 7 | **Final experiments A–D** (repeated CV) | `oasis_lib.py`, `final_cv.py`, `final_analyze.py` | `final_cv` | `OASIS1_OASIS2_classification.ipynb` |
-| 8 | 5 slices: 2.5D vs late fusion | `build_5slice.py`, `oasis_5slice.py`, `five_slice_cv.py`, `five_slice_analyze.py` | `five_slice` | – |
-| 9 | Late fusion with mean pooling | `meanpool_cv.py`, `meanpool_analyze.py`, `meanpool_roc.py` | `meanpool` | `OASIS_5slice_meanpool_trial.ipynb` |
+| 8 | 5 slices: 2.5D vs feature fusion | `build_5slice.py`, `oasis_5slice.py`, `five_slice_cv.py`, `five_slice_analyze.py` | `five_slice` | – |
+| 9 | Feature fusion with mean pooling | `meanpool_cv.py`, `meanpool_analyze.py`, `meanpool_roc.py` | `meanpool` | `OASIS_5slice_meanpool_trial.ipynb` |
 | 10 | Youden-J threshold (chosen on validation) | `youden_cv.py`, `youden_analyze.py` | `youden` | – |
 | 11 | Single train/val/test split (no cross-validation) | `single_split_5slice.py`, `single_split_5slice_analyze.py`, `single_split_roc.py` | `single_split_5slice` | – |
 | 12 | Top-5 confusion matrices | `top5_confusion.py` | `top5_confusion.*` | – |
@@ -222,14 +222,14 @@ Acknowledgement (please check the current wording on the OASIS website): *Data w
 2. **ImageNet 预训练的 ResNet18 优于从零训练的小 CNN**（AUC 0.61–0.74 对 0.56–0.67；小 CNN 在 0.5 阈值下大多预测“无痴呆”）。
 3. **Canny 选出的切片没有优势：** 在所有比较中都是最低或接近最低（该规则选到的是小脑层）。检验力最强的一对也只是有提示意义（AUC 差 −0.088，p = 0.064）。融合多张切片 / 多个视角，以及针对 MRI 的数据增强，也都没有可靠的提升。
 4. **OASIS-2 和 OASIS-1 有重复的参与者：** OASIS-2 第一次就诊的 149 人里有 111 人和 OASIS-1 的参与者是同一个人（图像相似度 0.95–0.997）。直接合并会把 AUC 抬高到 0.85–0.90（身份泄漏）；去除后只新增 **38 人**（共 **236** 人）。
-5. **最好的设置：** ResNet18，对固定轴位 78–82 层做晚期融合（AUC 0.74，准确率 0.67）——是从很多设置里挑出来的，所以偏乐观。**不是诊断工具。**
+5. **最好的设置：** ResNet18，对固定轴位 78–82 层做特征融合（AUC 0.74，准确率 0.67）——是从很多设置里挑出来的，所以偏乐观。**不是诊断工具。**
 
 ```mermaid
 flowchart LR
   A["OASIS-1 压缩包<br/>198 人，年龄 ≥ 60"] --> C["队列 + 图像级去重<br/>236 人"]
   B["OASIS-2 原始扫描，仅第一次就诊<br/>图谱配准，38 人独有"] --> C
   C --> D["128×128 切片<br/>固定 / Canny；轴位、冠状位、5 切片"]
-  D --> E["模型<br/>小 CNN | ResNet18<br/>单视角、双视角、2.5D、晚期融合"]
+  D --> E["模型<br/>小 CNN | ResNet18<br/>单视角、双视角、2.5D、特征融合"]
   E --> F["评估<br/>重复分层 5 折交叉验证<br/>AUC、准确率、混淆矩阵、配对检验"]
 ```
 
@@ -274,28 +274,28 @@ flowchart LR
 - 名义上唯一为正的配对差异：ResNet18 的 B − A = +0.054（置信区间 0.006–0.102）——只能当作假设。
 - 小 CNN 在 0.5 阈值下大多预测 CDR=0（概率校准差）——应按 AUC 比较。
 
-## 5 切片对比（方法 1：2.5D 对方法 2：晚期融合；固定 78–82 对 Canny c±2）
-同样的 236 人队列和折。ResNet18：固定切片的晚期融合最好（AUC 0.740，置信区间 0.68–0.80），2.5D 为 0.673，单切片为 0.679；小 CNN：没有差别（0.59–0.65）。固定切片在所有设置下都优于 Canny。详情：`results/five_slice/summary_en.md`、`five_slice_results.png`。
+## 5 切片对比（方法 1：2.5D 对方法 2：特征融合；固定 78–82 对 Canny c±2）
+同样的 236 人队列和折。ResNet18：固定切片的特征融合最好（AUC 0.740，置信区间 0.68–0.80），2.5D 为 0.673，单切片为 0.679；小 CNN：没有差别（0.59–0.65）。固定切片在所有设置下都优于 Canny。详情：`results/five_slice/summary_en.md`、`five_slice_results.png`。
 
-## 均值池化试验（均值池化晚期融合对 2.5D；固定 78–82 对 Canny c±2）
+## 均值池化试验（均值池化特征融合对 2.5D；固定 78–82 对 Canny c±2）
 无重叠队列（236 人），重复分层 5 折交叉验证。ResNet18 准确率：均值池化 0.661（固定）/ 0.661（Canny），2.5D 为 0.623 / 0.555，拼接为 0.669 / 0.619。均值池化在所有格子里都不低于 2.5D（只有 ResNet18-Canny 的 AUC 明显大于 0：+0.078，置信区间 0.014–0.142）；与拼接基本相当。notebook：`notebooks/OASIS_5slice_meanpool_trial.ipynb`；表格和图：`results/meanpool/`。
 
 ## 最好模型与换用 Canny 切片的同一模型（课程风格 notebook）
-`notebooks/OASIS_best_model_vs_canny.ipynb`：固定 78–82 的 ResNet18 晚期融合（拼接）（AUC 0.740，准确率 0.669）对完全相同的、使用 Canny c±2 的模型（AUC 0.657，准确率 0.619）；AUC 配对差 −0.088（95% 置信区间 −0.177…+0.001，p = 0.064）：有提示意义，但不能下结论。代码遵循课程 notebook 的写法（显式训练循环、检查点文件、提前停止、torchmetrics、Grad-CAM）；第 0 折的结果与交叉验证完全一致。
+`notebooks/OASIS_best_model_vs_canny.ipynb`：固定 78–82 的 ResNet18 特征融合（拼接）（AUC 0.740，准确率 0.669）对完全相同的、使用 Canny c±2 的模型（AUC 0.657，准确率 0.619）；AUC 配对差 −0.088（95% 置信区间 −0.177…+0.001，p = 0.064）：有提示意义，但不能下结论。代码遵循课程 notebook 的写法（显式训练循环、检查点文件、提前停止、torchmetrics、Grad-CAM）；第 0 折的结果与交叉验证完全一致。
 
-## MRI 数据增强和补成正方形的轴位切片（最好模型：ResNet18，拼接晚期融合，固定 78–82）
+## MRI 数据增强和补成正方形的轴位切片（最好模型：ResNet18，拼接特征融合，固定 78–82）
 - **纵横比：** 轴位切片（208 × 176）原来直接缩放到 128 × 128（被压扁约 18%）；现在先补零到 208 × 208 再缩放。没有可靠的影响：固定 0.740 → 0.726（配对差 −0.009，p = 0.82），Canny 0.657 → 0.688（差 +0.027，p = 0.43）。56% 的受试者的 Canny 选层发生了变化。
 - **数据增强**（只用于训练，每个受试者的 5 张切片共用一组随机参数；折和随机种子相同）：旋转 ±5° 的基线对比 G（旋转 ±10°、平移 ±5%、缩放 ±5%）、I（再加偏置场、伽马、噪声、模糊）和 GI。都没有帮助（AUC 相对基线的变化：G −0.02…−0.03，I −0.04…−0.05，GI +0.00…−0.05）；强度增强在两次实验里都略差（有一次 p = 0.037，在六次比较下不能下结论）。
 - 详情：`results/augmentation_square/summary_en.md`。其他实验**没有**用补成正方形的切片重跑。切片的轴、方向和层号检查：`scripts/verify_slices.py`。
 
 ## 海马体层切片与原来固定切片的对比（探索性）
 - **层的选择：** 在跑任何模型之前，只凭解剖定下（没有用标签）：在 30 人平均图上，海马体出现在轴位 z ≈ 60–66，原来固定的冠状 105 本来就切过海马体。这是目测估计（误差约 ±5 层），不是图谱分割。主选 z = 62（叠 60–64）；z = 59–63 是之后应要求加的，所以一共试了两种叠层。
-- **结果（ResNet18，折和随机种子相同，各折 AUC 均值；与原来固定切片的配对差）：** 单层 z62 0.636 / z61 0.648，对比轴位 80 的 0.679（差 −0.043 / −0.032）；晚期融合 60–64 0.673 / 59–63 0.678，对比 78–82 的 0.727（差 −0.054 / −0.049）；轴位 62 加冠状 105 为 0.645，对比轴位 80 加冠状 105 的 0.666（差 −0.021）。所有区间都包含 0（p 在 0.19 到 0.49 之间）：**海马体层切片没有改善结果**，反而略低。
+- **结果（ResNet18，折和随机种子相同，各折 AUC 均值；与原来固定切片的配对差）：** 单层 z62 0.636 / z61 0.648，对比轴位 80 的 0.679（差 −0.043 / −0.032）；特征融合 60–64 0.673 / 59–63 0.678，对比 78–82 的 0.727（差 −0.054 / −0.049）；轴位 62 加冠状 105 为 0.645，对比轴位 80 加冠状 105 的 0.666（差 −0.021）。所有区间都包含 0（p 在 0.19 到 0.49 之间）：**海马体层切片没有改善结果**，反而略低。
 - 脚本：`scripts/build_hippo_slices.py`、`hippo_cv.py`、`hippo_cv_59_63.py`、`hippo_analyze.py`；表格在 `results/hippo/`。逐层的描述性分析（萎缩指标和 Canny 边缘数）：`scripts/slice_signal_profile.py`、`results/slice_signal_profile.png`（用了标签，只是描述）。
 
 ## 早期融合求和，以及全新随机种子的重跑（探索性）
 - **早期融合求和**（5 张切片逐像素相加后除以 5，变成一张图）对比早期拼接（即 2.5D 通道叠加）、晚期拼接和晚期均值池化，折和种子相同。ResNet18，固定 78–82（各折 AUC 均值）：求和 0.666，早期拼接 0.668，晚期均值池化 0.693，晚期拼接 0.727；Canny c±2：求和 0.636，早期拼接 0.608，晚期均值池化 0.685，晚期拼接 0.639。ResNet18 下求和没有超过其他方式（固定层：求和减晚期拼接 −0.061，p = 0.010）。小 CNN 下它名义上高于其他固定层方案（0.702 对 0.642–0.689），但各折平均和汇总 AUC 不一致（0.702 对 0.642），所以我们不依赖这个结果。表格：`results/early_sum/`。
-- **全新种子**（新的折、验证集和模型种子，3 次重复；之前所有比较都用同一套种子，最好的方案是在它们上面挑出来的）：固定 78–82 的晚期融合从 0.727 降到 0.683，海马体 z59–63 保持 0.670（配对差 −0.012，95% 区间 −0.041…+0.017）。之前固定层的优势有一部分是挑选带来的运气。表格：`results/fresh_seeds/`；海马体对比的图：`results/hippo/hippo_vs_fixed.png`、`hippo_roc_confusion.png`。
+- **全新种子**（新的折、验证集和模型种子，3 次重复；之前所有比较都用同一套种子，最好的方案是在它们上面挑出来的）：固定 78–82 的特征融合从 0.727 降到 0.683，海马体 z59–63 保持 0.670（配对差 −0.012，95% 区间 −0.041…+0.017）。之前固定层的优势有一部分是挑选带来的运气。表格：`results/fresh_seeds/`；海马体对比的图：`results/hippo/hippo_vs_fixed.png`、`hippo_roc_confusion.png`。
 
 ## 术语表
 
@@ -305,7 +305,7 @@ flowchart LR
 | **固定切片** | 在图谱配准后的体积里取预先设定位置的切片（轴位 80、冠状位 105，或轴位 78–82）。 |
 | **Canny 选片** | 在搜索范围内（轴位 50–110）选 Canny 边缘像素最多的那一层。不需要标签；倾向于选到小脑。 |
 | **2.5D** | 把相邻的几张切片叠成一个 2D 网络的输入通道（早期融合）。 |
-| **晚期融合** | 每张切片分别经过同一个编码器，之后再合并特征（拼接或均值池化）。 |
+| **特征融合** | 每张切片分别经过同一个编码器，之后再合并特征（拼接或均值池化）。 |
 | **均值池化** | 对每张切片的特征向量逐维取平均（与顺序无关，不增加参数）。 |
 | **微调 / 预训练** | 从 ImageNet 权重出发，用较小的学习率更新所有层。 |
 | **重复分层 5 折交叉验证** | 按受试者划分的 5 折交叉验证重复两次，按“数据集 × 标签”分层；每次重复里每个人被测试一次。 |
@@ -323,11 +323,11 @@ flowchart LR
 | **A、B、C、D** | 最终实验：A 固定轴位 80；B 固定冠状位 105；C 固定轴位 80 + 冠状位 105（双视角）；D Canny 轴位 + Canny 冠状位（双视角） | `results/final_cv`、`results/dual_view` |
 | **S1** | 单切片参照（固定 80 或 Canny c） | `results/five_slice` |
 | **M1（2.5D）** | 5 张切片叠成输入通道 | `results/five_slice` |
-| **M2** | **拼接**的晚期融合，共享编码器 | `results/five_slice` |
-| **M2-mean** | **均值池化**的晚期融合 | `results/meanpool` |
+| **M2** | **拼接**的特征融合，共享编码器 | `results/five_slice` |
+| **M2-mean** | **均值池化**的特征融合 | `results/meanpool` |
 | **固定 78–82** | 连续 5 张轴位切片 78、79、80、81、82 | 所有 5 切片实验 |
 | **Canny c±2** | Canny 选出的切片 `c` 及其前后各 2 张 | 所有 5 切片实验 |
-| **模型 A / 模型 B** | 在 `OASIS_best_model_vs_canny.ipynb` 里：A = 固定 78–82，B = Canny c±2（同一个 ResNet18 晚期融合） | notebook |
+| **模型 A / 模型 B** | 在 `OASIS_best_model_vs_canny.ipynb` 里：A = 固定 78–82，B = Canny c±2（同一个 ResNet18 特征融合） | notebook |
 | **baseline、G、I、GI** | 增强各组：旋转 ±5° / 几何 / 强度 / 两者 | `results/augmentation*` |
 | **压扁 / 补成正方形** | 轴位切片直接缩放到 128×128 / 先补成正方形再缩放 | `results/square` |
 
@@ -342,8 +342,8 @@ flowchart LR
 | 5 | ❌ **无效，仅作记录：** 去重之前合并 OASIS-1 + OASIS-2 的运行 | `combined_*.py`、`single_split_experiments.py`、`single_split_resnet*.py` | 不在仓库中（`*_LEAKED_overlap`） | – |
 | 6 | 重叠检测，236 人队列 | `build_combined.py`、`dataset_audit.py`、`overlap_figure.py` | `oasis_overlap_check.png` | – |
 | 7 | **最终实验 A–D**（重复交叉验证） | `oasis_lib.py`、`final_cv.py`、`final_analyze.py` | `final_cv` | `OASIS1_OASIS2_classification.ipynb` |
-| 8 | 5 切片：2.5D 对晚期融合 | `build_5slice.py`、`oasis_5slice.py`、`five_slice_cv.py`、`five_slice_analyze.py` | `five_slice` | – |
-| 9 | 均值池化的晚期融合 | `meanpool_cv.py`、`meanpool_analyze.py`、`meanpool_roc.py` | `meanpool` | `OASIS_5slice_meanpool_trial.ipynb` |
+| 8 | 5 切片：2.5D 对特征融合 | `build_5slice.py`、`oasis_5slice.py`、`five_slice_cv.py`、`five_slice_analyze.py` | `five_slice` | – |
+| 9 | 均值池化的特征融合 | `meanpool_cv.py`、`meanpool_analyze.py`、`meanpool_roc.py` | `meanpool` | `OASIS_5slice_meanpool_trial.ipynb` |
 | 10 | Youden J 阈值（在验证集上选） | `youden_cv.py`、`youden_analyze.py` | `youden` | – |
 | 11 | 一次 train/val/test 划分（不做交叉验证） | `single_split_5slice.py`、`single_split_5slice_analyze.py`、`single_split_roc.py` | `single_split_5slice` | – |
 | 12 | 前 5 名的混淆矩阵 | `top5_confusion.py` | `top5_confusion.*` | – |

@@ -1,4 +1,4 @@
-# Square-padded axial slices and MRI data augmentation — best model (ResNet18, late fusion by concatenation, fixed slices 78–82)
+# Square-padded axial slices and MRI data augmentation — best model (ResNet18, feature fusion by concatenation, fixed slices 78–82)
 
 **Setup.** 236 subjects (OASIS-1 + non-overlapping OASIS-2, first visit), repeated stratified 5-fold CV (2 repeats), same folds and seeds throughout, so all comparisons are paired.
 Preprocessing change: the axial slice (208 × 176) used to be resized straight to 128 × 128 (squashed by ~18%); it is now zero-padded to 208 × 208 first (brain width/height 0.94 → 0.81, close to real anatomy).
