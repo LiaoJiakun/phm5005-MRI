@@ -9,13 +9,13 @@
 | Backbone | Slices | Method | Mean threshold (SD; range) | Accuracy @0.5 | Accuracy @Youden | Sens. / Spec. @Youden | Δ fold accuracy (95% CI) |
 |---|---|---|---|---|---|---|---|
 | Small CNN | Fixed 78–82 | 2.5D | 0.475 (0.03; 0.39–0.50) | 0.597 | 0.631 | 0.75 / 0.51 | +0.047 (−0.016, +0.109) |
-| Small CNN | Fixed 78–82 | Late fusion, mean pooling | 0.484 (0.03; 0.42–0.54) | 0.610 | 0.653 | 0.71 / 0.60 | +0.058 (−0.034, +0.150) |
+| Small CNN | Fixed 78–82 | Feature fusion, mean pooling | 0.484 (0.03; 0.42–0.54) | 0.610 | 0.653 | 0.71 / 0.60 | +0.058 (−0.034, +0.150) |
 | Small CNN | Canny c±2 | 2.5D | 0.481 (0.02; 0.44–0.50) | 0.551 | 0.589 | 0.69 / 0.49 | +0.015 (−0.035, +0.065) |
-| Small CNN | Canny c±2 | Late fusion, mean pooling | 0.494 (0.02; 0.47–0.53) | 0.572 | 0.576 | 0.51 / 0.64 | −0.008 (−0.067, +0.051) |
+| Small CNN | Canny c±2 | Feature fusion, mean pooling | 0.494 (0.02; 0.47–0.53) | 0.572 | 0.576 | 0.51 / 0.64 | −0.008 (−0.067, +0.051) |
 | ResNet18 | Fixed 78–82 | 2.5D | 0.413 (0.25; 0.15–0.91) | 0.623 | 0.627 | 0.73 / 0.53 | −0.008 (−0.041, +0.024) |
-| ResNet18 | Fixed 78–82 | Late fusion, mean pooling | 0.386 (0.23; 0.15–0.87) | 0.661 | 0.636 | 0.65 / 0.62 | −0.005 (−0.061, +0.052) |
+| ResNet18 | Fixed 78–82 | Feature fusion, mean pooling | 0.386 (0.23; 0.15–0.87) | 0.661 | 0.636 | 0.65 / 0.62 | −0.005 (−0.061, +0.052) |
 | ResNet18 | Canny c±2 | 2.5D | 0.386 (0.22; 0.07–0.83) | 0.555 | 0.572 | 0.69 / 0.45 | −0.025 (−0.068, +0.018) |
-| ResNet18 | Canny c±2 | Late fusion, mean pooling | 0.293 (0.14; 0.12–0.55) | 0.661 | 0.636 | 0.76 / 0.51 | −0.015 (−0.053, +0.023) |
+| ResNet18 | Canny c±2 | Feature fusion, mean pooling | 0.293 (0.14; 0.12–0.55) | 0.661 | 0.636 | 0.76 / 0.51 | −0.015 (−0.053, +0.023) |
 
 (Δ = per-fold accuracy at the validation-selected Youden threshold minus accuracy at 0.5, mean of 10 folds.)
 

@@ -2,7 +2,7 @@
 
 **Results** (236 subjects, repeated stratified 5-fold CV, out-of-fold accuracy at threshold 0.5)
 
-| Backbone | Slices | 2.5D | **Late fusion, mean pooling** | Late fusion, concat (ref.) | Single slice (ref.) |
+| Backbone | Slices | 2.5D | **Feature fusion, mean pooling** | Feature fusion, concat (ref.) | Single slice (ref.) |
 |---|---|---|---|---|---|
 | ResNet18 | Fixed 78-82 | 0.623 | **0.661** | 0.669 | 0.627 |
 | ResNet18 | Canny c±2 | 0.555 | **0.661** | 0.619 | 0.589 |

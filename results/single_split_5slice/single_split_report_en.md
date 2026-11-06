@@ -1,6 +1,6 @@
 # Mean pooling vs 2.5D with Youden-J threshold — single split, no cross-validation
 
-**Setup.** 236 subjects (no OASIS-1/2 overlap; OASIS-2 first visit only). **One** subject-level split stratified by dataset × label: train 165 / validation 35 / **test 36** (18 CDR>0, 6 from OASIS-2); no folds. Settings: {fixed 78–82, Canny c±2} × {2.5D, late fusion with mean pooling}; small CNN and ResNet18; 3 model seeds each (seeds only change initialisation, not the split). The Youden-J threshold is chosen on the **validation** set and applied once to the test set; 0.5 is shown for comparison. Mean ± SD over the 3 seeds.
+**Setup.** 236 subjects (no OASIS-1/2 overlap; OASIS-2 first visit only). **One** subject-level split stratified by dataset × label: train 165 / validation 35 / **test 36** (18 CDR>0, 6 from OASIS-2); no folds. Settings: {fixed 78–82, Canny c±2} × {2.5D, feature fusion with mean pooling}; small CNN and ResNet18; 3 model seeds each (seeds only change initialisation, not the split). The Youden-J threshold is chosen on the **validation** set and applied once to the test set; 0.5 is shown for comparison. Mean ± SD over the 3 seeds.
 
 | Backbone | Setting | Test AUC | Accuracy @0.5 | Accuracy @Youden | Sens. / Spec. @Youden | Youden threshold |
 |---|---|---|---|---|---|---|
