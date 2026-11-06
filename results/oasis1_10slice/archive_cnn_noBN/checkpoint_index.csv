@@ -1,0 +1,21 @@
+model,repeat,fold,seed,epochs_run,best_epoch,checkpoint,n_train,n_val,n_test
+CNN Scratch | Fixed,0,0,33000,8,6,results/oasis1_10slice/checkpoints/CNNScratch_Fixed_rep0_fold0.pt,134,24,40
+CNN Scratch | Canny,0,0,33000,8,7,results/oasis1_10slice/checkpoints/CNNScratch_Canny_rep0_fold0.pt,134,24,40
+ResNet18 | Fixed,0,0,33000,10,5,results/oasis1_10slice/checkpoints/ResNet18_Fixed_rep0_fold0.pt,134,24,40
+ResNet18 | Canny,0,0,33000,6,1,results/oasis1_10slice/checkpoints/ResNet18_Canny_rep0_fold0.pt,134,24,40
+CNN Scratch | Fixed,0,1,33001,9,3,results/oasis1_10slice/checkpoints/CNNScratch_Fixed_rep0_fold1.pt,134,24,40
+CNN Scratch | Canny,0,1,33001,9,3,results/oasis1_10slice/checkpoints/CNNScratch_Canny_rep0_fold1.pt,134,24,40
+ResNet18 | Fixed,0,1,33001,7,2,results/oasis1_10slice/checkpoints/ResNet18_Fixed_rep0_fold1.pt,134,24,40
+ResNet18 | Canny,0,1,33001,7,2,results/oasis1_10slice/checkpoints/ResNet18_Canny_rep0_fold1.pt,134,24,40
+CNN Scratch | Fixed,0,2,33002,21,14,results/oasis1_10slice/checkpoints/CNNScratch_Fixed_rep0_fold2.pt,134,24,40
+CNN Scratch | Canny,0,2,33002,14,7,results/oasis1_10slice/checkpoints/CNNScratch_Canny_rep0_fold2.pt,134,24,40
+ResNet18 | Fixed,0,2,33002,6,1,results/oasis1_10slice/checkpoints/ResNet18_Fixed_rep0_fold2.pt,134,24,40
+ResNet18 | Canny,0,2,33002,7,2,results/oasis1_10slice/checkpoints/ResNet18_Canny_rep0_fold2.pt,134,24,40
+CNN Scratch | Fixed,0,3,33003,11,4,results/oasis1_10slice/checkpoints/CNNScratch_Fixed_rep0_fold3.pt,135,24,39
+CNN Scratch | Canny,0,3,33003,8,4,results/oasis1_10slice/checkpoints/CNNScratch_Canny_rep0_fold3.pt,135,24,39
+ResNet18 | Fixed,0,3,33003,6,1,results/oasis1_10slice/checkpoints/ResNet18_Fixed_rep0_fold3.pt,135,24,39
+ResNet18 | Canny,0,3,33003,6,1,results/oasis1_10slice/checkpoints/ResNet18_Canny_rep0_fold3.pt,135,24,39
+CNN Scratch | Fixed,0,4,33004,11,10,results/oasis1_10slice/checkpoints/CNNScratch_Fixed_rep0_fold4.pt,135,24,39
+CNN Scratch | Canny,0,4,33004,11,10,results/oasis1_10slice/checkpoints/CNNScratch_Canny_rep0_fold4.pt,135,24,39
+ResNet18 | Fixed,0,4,33004,8,3,results/oasis1_10slice/checkpoints/ResNet18_Fixed_rep0_fold4.pt,135,24,39
+ResNet18 | Canny,0,4,33004,7,2,results/oasis1_10slice/checkpoints/ResNet18_Canny_rep0_fold4.pt,135,24,39

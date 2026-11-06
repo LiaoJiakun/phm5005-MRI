@@ -1,0 +1,5 @@
+comparison,mean_fold_diff,fold_ci_lo,fold_ci_hi,wilcoxon_p,folds_first_better,n_folds,subj_avg_auc_diff,boot_ci_lo,boot_ci_hi
+CNN Scratch: Canny - Fixed,-0.004,-0.062,0.054,0.812,2,5,0.002,-0.046,0.059
+ResNet18: Canny - Fixed,-0.052,-0.161,0.056,0.25,1,5,-0.037,-0.116,0.032
+Fixed slices: ResNet18 - CNN Scratch,-0.001,-0.082,0.081,1.0,3,5,-0.002,-0.065,0.059
+Canny slices: ResNet18 - CNN Scratch,-0.049,-0.122,0.024,0.188,1,5,-0.04,-0.116,0.027

@@ -1,0 +1,5 @@
+model,(A) mean fold AUC,"(B) pooled OOF AUC, repeat 0",(B) repeat 1,(B) mean of repeats [95% CI],(C) subject-averaged AUC [95% CI]
+CNN Scratch | Fixed,0.720 (sd 0.074),0.704,,"0.704 [0.634, 0.772]","0.704 [0.634, 0.772]"
+CNN Scratch | Canny,0.716 (sd 0.033),0.707,,"0.707 [0.636, 0.780]","0.707 [0.636, 0.780]"
+ResNet18 | Fixed,0.719 (sd 0.051),0.703,,"0.703 [0.628, 0.777]","0.703 [0.628, 0.777]"
+ResNet18 | Canny,0.667 (sd 0.078),0.666,,"0.666 [0.593, 0.736]","0.666 [0.593, 0.736]"

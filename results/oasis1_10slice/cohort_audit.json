@@ -1,0 +1,73 @@
+{
+ "clinical_rows": 436,
+ "rows_without_valid_id": 0,
+ "duplicate_ids_in_spreadsheet": 0,
+ "subjects_with_more_than_one_row": 20,
+ "excluded_age_under_60": 238,
+ "excluded_age_missing": 0,
+ "excluded_age60plus_cdr_missing": 0,
+ "t88_masked_gfc_scans_found": 436,
+ "subjects_with_more_than_one_scan_file": 20,
+ "age60plus_cdr_known_before_image_check": 198,
+ "excluded_no_image": 0,
+ "same_subjects_as_previous_cohort_file": true,
+ "n_subjects": 198,
+ "n_cdr0": 98,
+ "n_cdr_pos": 100,
+ "cdr_counts": {
+  "0.0": 98,
+  "0.5": 70,
+  "1.0": 28,
+  "2.0": 2
+ },
+ "orientation_before_after": [
+  [
+   [
+    "L",
+    "A",
+    "S"
+   ],
+   [
+    "R",
+    "A",
+    "S"
+   ]
+  ]
+ ],
+ "volume_shape": [
+  176,
+  208,
+  176
+ ],
+ "fixed_indices_0based": [
+  75,
+  76,
+  77,
+  78,
+  79,
+  80,
+  81,
+  82,
+  83,
+  84
+ ],
+ "canny_search_range": [
+  50,
+  110
+ ],
+ "canny_window": "c-5 .. c+4",
+ "canny_center_mean": 66.12626262626263,
+ "canny_center_sd": 5.794390980950316,
+ "canny_center_min": 59,
+ "canny_center_max": 91,
+ "canny_window_min": 54,
+ "canny_window_max": 95,
+ "preprocessing_flags": {
+  "empty": 0,
+  "constant": 0,
+  "nonfinite_volume": 0,
+  "flag_note": "counted over all slices inspected incl. the Canny search range; must be 0 for the cohort to be used as is"
+ },
+ "fixed_slices_empty_after_resize": 0,
+ "canny_slices_empty_after_resize": 0
+}

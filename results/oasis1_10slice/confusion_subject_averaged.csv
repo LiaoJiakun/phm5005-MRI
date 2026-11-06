@@ -1,0 +1,5 @@
+model,tn,fp,fn,tp
+CNN Scratch | Fixed,54,44,23,77
+CNN Scratch | Canny,49,49,22,78
+ResNet18 | Fixed,74,24,49,51
+ResNet18 | Canny,62,36,40,60

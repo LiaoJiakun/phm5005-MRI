@@ -43,3 +43,12 @@ results/square_padding_check.png
 __pycache__/
 *.pyc
 .ipynb_checkpoints/
+
+# ---- OASIS-1 10-slice experiment: subject-level tables and brain-slice figures stay local ----
+results/oasis1_10slice*/cohort.csv
+results/oasis1_10slice*/split_table.csv
+results/oasis1_10slice*/figures/example_slices.png
+results/oasis1_10slice*/figures/gradcam_*.png
+results/oasis1_10slice_smoke/
+*_executed.ipynb
+results/oasis1_10slice_tuned_smoke/
