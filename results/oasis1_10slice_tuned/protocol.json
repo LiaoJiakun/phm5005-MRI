@@ -1,0 +1,135 @@
+{
+ "device": "mps",
+ "configs": {
+  "resnet": {
+   "R1_base": {
+    "lr": 0.0001,
+    "wd": 0.0001,
+    "epochs": 20,
+    "patience": 5,
+    "dropout": 0.3,
+    "fusion": "concat",
+    "smoothing": 0.0,
+    "sched": false,
+    "freeze": false
+   },
+   "R2_lr3e-5": {
+    "lr": 3e-05,
+    "wd": 0.0001,
+    "epochs": 30,
+    "patience": 7,
+    "dropout": 0.3,
+    "fusion": "concat",
+    "smoothing": 0.0,
+    "sched": true,
+    "freeze": false
+   },
+   "R3_lr1e-5": {
+    "lr": 1e-05,
+    "wd": 0.0001,
+    "epochs": 30,
+    "patience": 7,
+    "dropout": 0.3,
+    "fusion": "concat",
+    "smoothing": 0.0,
+    "sched": true,
+    "freeze": false
+   },
+   "R4_probmean": {
+    "lr": 3e-05,
+    "wd": 0.0001,
+    "epochs": 30,
+    "patience": 7,
+    "dropout": 0.3,
+    "fusion": "probmean",
+    "smoothing": 0.0,
+    "sched": true,
+    "freeze": false
+   },
+   "R5_regularised": {
+    "lr": 3e-05,
+    "wd": 0.01,
+    "epochs": 30,
+    "patience": 7,
+    "dropout": 0.5,
+    "fusion": "concat",
+    "smoothing": 0.1,
+    "sched": true,
+    "freeze": false
+   },
+   "R6_freeze_early": {
+    "lr": 3e-05,
+    "wd": 0.0001,
+    "epochs": 30,
+    "patience": 7,
+    "dropout": 0.3,
+    "fusion": "concat",
+    "smoothing": 0.0,
+    "sched": true,
+    "freeze": true
+   }
+  },
+  "cnn": {
+   "C1_base": {
+    "lr": 0.001,
+    "wd": 0.0001,
+    "epochs": 35,
+    "patience": 7,
+    "dropout": 0.3,
+    "fusion": "concat",
+    "smoothing": 0.0,
+    "sched": false,
+    "freeze": false
+   },
+   "C2_lr3e-4": {
+    "lr": 0.0003,
+    "wd": 0.0001,
+    "epochs": 50,
+    "patience": 10,
+    "dropout": 0.3,
+    "fusion": "concat",
+    "smoothing": 0.0,
+    "sched": true,
+    "freeze": false
+   },
+   "C3_regularised": {
+    "lr": 0.001,
+    "wd": 0.001,
+    "epochs": 50,
+    "patience": 10,
+    "dropout": 0.5,
+    "fusion": "concat",
+    "smoothing": 0.1,
+    "sched": true,
+    "freeze": false
+   },
+   "C4_probmean": {
+    "lr": 0.0003,
+    "wd": 0.0001,
+    "epochs": 50,
+    "patience": 10,
+    "dropout": 0.3,
+    "fusion": "probmean",
+    "smoothing": 0.0,
+    "sched": true,
+    "freeze": false
+   }
+  }
+ },
+ "outer": {
+  "folds": 5,
+  "fold_seed": 31000,
+  "val_seed": 32000,
+  "val_fraction": 0.15
+ },
+ "inner": {
+  "folds": 3,
+  "seed": 34000
+ },
+ "final_seeds": [
+  33000,
+  43000,
+  53000
+ ],
+ "torch": "2.5.1"
+}

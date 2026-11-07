@@ -1,0 +1,11 @@
+backbone,config,Canny,Fixed
+cnn,C1_base,0.73,0.706
+cnn,C2_lr3e-4,0.727,0.712
+cnn,C3_regularised,0.718,0.72
+cnn,C4_probmean,0.732,0.729
+resnet,R1_base,0.679,0.691
+resnet,R2_lr3e-5,0.662,0.687
+resnet,R3_lr1e-5,0.632,0.685
+resnet,R4_probmean,0.705,0.713
+resnet,R5_regularised,0.664,0.676
+resnet,R6_freeze_early,0.665,0.688
